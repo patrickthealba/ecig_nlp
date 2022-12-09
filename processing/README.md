@@ -1,6 +1,6 @@
 # Processing Complete Documents
 
-![Alt Image text](./Figure 1.jpg)
+![Alt Image text](https://github.com/patrickthealba/ecig_nlp/blob/master/processing/Figure%201.jpg?raw=true "Figure 1 Processing Pipeline")
 
 
 Our cohort consists of more than 12 million veterans with over 4 billion clinical documents. It is challenging to process all these documents with limited computing resources. To address this challenge we implement a workflow shown in figure 1 which tackles this problem in four main steps: 1) All clinical documents are stored in Microsoft SQL Server and are full text indexed. We first use full text index search with a manually developed list of key terms which largely covers smoking and ENDS. This reduces cohort documents to about 45 million. 2) We then use a manually developed list of regular expressions of ENDS key terms to process all these 45 million documents. This resulted about 3.5 million documents that contains ENDS key terms. – see Supplementary Materials for complete term sets* 3) The system next extracts ENDS key terms and surrounding context for each of these 3.5 million documents. 4) The system finally classifies the context into ENDS usages with deep learning algorithms. All instances of an extracted term were classified into one of five categories: Active-User, Usage-Unknown, Irrelevant, Former-User, and Non-User. 
