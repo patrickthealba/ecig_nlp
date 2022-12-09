@@ -147,7 +147,7 @@ def read_save(batch):
     print(f'     processing document {r_min} to document {r_max}      ')
     
     documentAssembler = DocumentAssembler() \
-        .setInputCol('ReportText') \
+        .setInputCol('Text') \
         .setOutputCol("document")
 
     sentencerDL = SentenceDetectorDLModel \
@@ -168,13 +168,13 @@ def read_save(batch):
     ])
     
     output_table = "[nlp].[2022_predictions]"
-    empty_df = spark.createDataFrame([['']]).toDF("ReportText")
+    empty_df = spark.createDataFrame([['']]).toDF("Text")
     doc_Model = doc_pipeline.fit(empty_df)
     
-    input_table = f'''(SELECT distinct A.tiudocumentsid, rowid,  lower(B.ReportText) as ReportText
+    input_table = f'''(SELECT distinct A.documentsid, rowid,  lower(B.Text) as Text
                         FROM [temp].[2022_docs_regex_filltered] A  
                         JOIN [src].TIUDocument B with(nolock)  
-                        ON A.tiudocumentsid = B.tiudocumentsid  
+                        ON A.documentsid = B.documentsid  
                         WHERE rowid > = {r_min} AND rowid  < {r_max}) sub'''
     df_ecig = spark.read.format("com.microsoft.sqlserver.jdbc.spark") \
             .option("url", url) \
@@ -189,11 +189,11 @@ def read_save(batch):
             
     doc_df = doc_Model.transform(df_ecig).cache()
 
-    context_df = doc_df.select('tiudocumentsid', 'rowid',
+    context_df = doc_df.select('documentsid', 'rowid',
                          'sentence', F.explode('reg_matches').alias('match')) \
-        .select('tiudocumentsid', 'match', 'rowid',
+        .select('documentsid', 'match', 'rowid',
                 F.explode('sentence').alias('sent')) \
-        .select('tiudocumentsid', 'rowid',
+        .select('documentsid', 'rowid',
                 F.col('sent')['result'].alias('original_sentence'),
                 F.col('sent')['metadata']['sentence'].alias('sent_num'),
                 F.col('match')['metadata']['sentence'].alias("matched_sent"),
@@ -203,13 +203,13 @@ def read_save(batch):
                 ) \
         .filter("matched_sent-sent_num<=1 AND matched_sent-sent_num>=-1") \
         .withColumn("InstanceID",
-                  F.concat(F.col('TIUDocumentSID'), F.lit('_'), F.col('matched_sent')))\
+                  F.concat(F.col('DocumentSID'), F.lit('_'), F.col('matched_sent')))\
         .dropDuplicates(['InstanceID','sent_num'])\
         .withColumn('original_sentence', F.regexp_replace('original_sentence',r'\r',''))\
         .orderBy('InstanceID', 'sent_num').cache()
 
     data = context_df.groupBy('InstanceID') \
-        .agg(F.first('TIUDocumentSID').alias('TIUDocumentSID'),
+        .agg(F.first('DocumentSID').alias('DocumentSID'),
              F.first('spanStart').alias('spanStart'),
              F.first('spanEnd').alias('spanEnd'),
              F.concat_ws(" ", F.collect_list('ORIGINAL_SENTENCE')).alias('text'),
@@ -229,7 +229,7 @@ def read_save(batch):
     context[['prob_active-user', 'prob_usage-unknown', 'prob_non-user', 'prob_irrelevant', 'prob_former-user']] = [p['score'] for p in predictions]
     
     spark.createDataFrame(context)\
-        .select('rowid', 'InstanceID', 'TIUDocumentSID', 'spanStart', 'spanEnd', 'term', 'prediction',
+        .select('rowid', 'InstanceID', 'DocumentSID', 'spanStart', 'spanEnd', 'term', 'prediction',
                 'prob_active-user', 'prob_usage-unknown', 'prob_non-user', 'prob_irrelevant', 'prob_former-user')\
         .write\
         .format("com.microsoft.sqlserver.jdbc.spark")\
