@@ -40,7 +40,7 @@ def regex_filter(batch):
     print(f'     processing document {r_min} to document {r_max}      ')
     
     documentAssembler = DocumentAssembler() \
-        .setInputCol('ReportText') \
+        .setInputCol('Text') \
         .setOutputCol("document")
 
     regex_matcher_doc = RegexMatcher() \
@@ -55,13 +55,13 @@ def regex_filter(batch):
     ])
     
     output_table = "[temp].[2022_docs_regex_filltered]"
-    empty_df = spark.createDataFrame([['']]).toDF("ReportText")
+    empty_df = spark.createDataFrame([['']]).toDF("Text")
     doc_Model = doc_pipeline.fit(empty_df)
     
-    input_table = f'''(SELECT distinct A.tiudocumentsid, rowid,  lower(B.ReportText) as ReportText
+    input_table = f'''(SELECT distinct A.documentsid, rowid,  lower(B.Text) as Text
                         FROM [nlp].[2022_complete_docs] A  
-                        JOIN [src].TIUDocument B with(nolock)  
-                        ON A.tiudocumentsid = B.tiudocumentsid  
+                        JOIN [src].Document B with(nolock)  
+                        ON A.documentsid = B.documentsid  
                         WHERE rowid > = {r_min} AND rowid  < {r_max}) sub'''
                         
     df_ecig = spark.read.format("com.microsoft.sqlserver.jdbc.spark") \
@@ -79,7 +79,7 @@ def regex_filter(batch):
     if doc_df.count()==0:
         return
     
-    doc_df.select('TIUDocumentSID')\
+    doc_df.select('DocumentSID')\
         .write\
         .format("com.microsoft.sqlserver.jdbc.spark")\
         .mode("append") \
