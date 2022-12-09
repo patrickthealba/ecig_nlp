@@ -15,6 +15,6 @@ Features engineering:
 3.	Embeddings + document template type
 4.	Embeddings + ecig term + document template type
 
-![Alt Image text](https://github.com/patrickthealba/ecig_nlp/blob/master/Model_training/p2.jpg?raw=true "table1")
+![Alt Image text](https://github.com/patrickthealba/ecig_nlp/blob/master/Model_training/p2.jpg.png?raw=true "table1")
 
-![Alt Image text](https://github.com/patrickthealba/ecig_nlp/blob/master/Model_training/p1.jpg?raw=true "table2")
+![Alt Image text](https://github.com/patrickthealba/ecig_nlp/blob/master/Model_training/p1.jpg.png?raw=true "table2")
