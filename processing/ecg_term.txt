@@ -1,0 +1,25 @@
+(\b|_+)(electronic|electric|digital|digi|e)( +|-)?(cigg?arett?es?|cigerettes?|cigrettes?|cigg?s?|juice|liquid),ecig_nouns
+\b(electronic|electric|e)( +|-)?(hookahs?|huka),ecig_nouns
+\b(vape?|hookah|e)( +|-)?pens?\b,ecig_nouns
+\b(electronic|electric|e)?(water)?( +|-)?vap(ourizer|ouiser|orizer|oriser|ing|our|or|ed|es|er|e)\b,ecig_nouns
+\bvapou?ri(s|z)(ing|ed) *(cigg?arett?es?|cigg?s?),ecig_nouns
+\bvapou?ri(s|z)(ing|ed) *tobacco,ecig_nouns
+\bvapou?ri(s|z)(ing|ed) *nicotene,ecig_nouns
+\bvapou?ri(s|z)(ing|ed) *device,ecig_nouns
+cigalike,ecig_nouns
+\bjuul(ing)?\b,ecig_verb
+\bsuorin,brand_names
+kanger,brand_names
+joytech,brand_names
+vapou?r *4 *life,brand_names
+\bnjoy\b,brand_names
+greensmoke,brand_names
+\bblu *vapor *cigaretts,brand_names
+(green) *e-?smoke,brand_names
+\b(electronic|electric|e)( +|-)?smok(ed|es|ing|er|e)?,ecig_nouns
+(inhaled|vaporized)( +|-)?(nicotene|tobacco),ecig_nouns
+cloud( |-)?chasing,ecig_nouns
+\bmarkten\b,brand_names
+\bvuse\b,brand_names
+\bblu *vapor,brand_names
+\bvapper\b,ecig_nouns
